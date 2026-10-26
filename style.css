@@ -1,0 +1,345 @@
+/* ==========================================================================
+   Portfólio — César Augusto
+   Conceito: uma folha de caderno quadriculado. O texto assenta na grade.
+   Paleta (3 cores): papel, tinta de caneta azul, marca-texto amarelo (ipê).
+   Tipografia: Bricolage Grotesque (títulos) + Literata (texto).
+   ========================================================================== */
+
+/* ---------- Fontes (locais, variáveis) ---------- */
+@font-face {
+  font-family: "Bricolage Grotesque";
+  src: url("./fonts/bricolage-grotesque-latin-wdth-normal.woff2") format("woff2");
+  font-weight: 200 800;
+  font-stretch: 75% 100%;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: "Literata";
+  src: url("./fonts/literata-latin-wght-normal.woff2") format("woff2");
+  font-weight: 200 900;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: "Literata";
+  src: url("./fonts/literata-latin-wght-italic.woff2") format("woff2");
+  font-weight: 200 900;
+  font-style: italic;
+  font-display: swap;
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+/* ---------- Tokens ---------- */
+:root {
+  --papel: #F5F6F0;
+  --tinta: #1F2E7A;
+  --marca: #F4C430;
+  --grade: rgba(31, 46, 122, 0.11);
+
+  /* Unidade da grade: uma linha de caderno. Quase tudo é múltiplo dela. */
+  --u: 1.75rem;
+  --trilho: calc(var(--u) * 8);      /* coluna dos títulos de seção */
+
+  --recuo: var(--u);
+  --passo: var(--u);
+
+  --fonte-titulo: "Bricolage Grotesque", "Arial Narrow", "Helvetica Neue", Arial, sans-serif;
+  --fonte-texto: "Literata", Georgia, "Times New Roman", serif;
+
+  --suave: cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+/* ---------- Base ---------- */
+*, *::before, *::after { box-sizing: border-box; }
+
+html {
+  background: var(--papel);
+  -webkit-text-size-adjust: 100%;
+          text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  overflow-x: clip;
+  color: var(--tinta);
+  font: 400 1.0625rem / var(--u) var(--fonte-texto);
+  font-kerning: normal;
+  hyphens: auto;
+  -webkit-font-smoothing: antialiased;
+
+  /* A grade. O deslocamento vertical faz o texto "pousar" sobre a linha. */
+  background-color: var(--papel);
+  background-image:
+    linear-gradient(var(--grade) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grade) 1px, transparent 1px);
+  background-size: var(--u) var(--u);
+  background-position: 50% calc(var(--u) * 0.74);
+}
+
+h1, h2, p, ul, figure { margin: 0; }
+ul { padding: 0; list-style: none; }
+
+::selection { background: var(--marca); color: var(--tinta); }
+
+/* A folha tem largura = número ímpar de unidades, centrada: assim a borda
+   esquerda do conteúdo cai exatamente sobre uma linha vertical da grade. */
+.folha {
+  width: min(calc(100% - var(--u) * 2), calc(var(--u) * 45));
+  width: min(
+    calc(round(down, calc(100% - var(--u) * 3), calc(var(--u) * 2)) + var(--u)),
+    calc(var(--u) * 45)
+  );
+  margin-inline: auto;
+  padding-bottom: calc(var(--u) * 6);
+}
+
+/* ---------- Abertura ---------- */
+.abertura {
+  --h1: calc(var(--u) * 3.2);
+  --h1-lh: calc(var(--u) * 3);
+  --foto: calc(var(--u) * 3.5);
+
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  padding-top: calc(var(--u) * 3);
+}
+
+.abertura h1 {
+  grid-area: 1 / 1;
+  font: 800 var(--h1) / var(--h1-lh) var(--fonte-titulo);
+  font-stretch: 80%;
+  letter-spacing: -0.04em;
+  hyphens: none;
+}
+
+.abertura h1 span {
+  display: block;
+  animation: sobe 0.9s var(--suave) both;
+}
+.abertura h1 span:nth-child(2) { animation-delay: 0.09s; }
+
+.retrato {
+  grid-area: 1 / 1;
+  align-self: end;
+  justify-self: start;
+  position: relative;
+  z-index: 1;
+  width: var(--foto);
+  margin-left: calc(var(--h1) * 2.25);
+  transform: rotate(-2deg);
+}
+
+.retrato::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--marca);
+  translate: calc(var(--u) * 0.45) calc(var(--u) * 0.45);
+  transform-origin: 0 50%;
+  animation: marca-entra 0.6s 0.5s var(--suave) both;
+}
+
+.retrato img {
+  position: relative;
+  z-index: 1;
+  display: block;
+  width: 100%;
+  aspect-ratio: 1;
+  object-fit: cover;
+  background: var(--papel);
+  border: 1px solid var(--tinta);
+}
+
+.apresentacao {
+  grid-area: 2 / 1;
+  margin-top: calc(var(--u) * 3);
+  max-width: calc(var(--u) * 26);
+  font-size: 1.25rem;
+  line-height: var(--u);
+  text-wrap: pretty;
+}
+
+/* ---------- Seções ---------- */
+.secao {
+  --fator: 4;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  row-gap: var(--u);
+  padding-top: calc(var(--u) * var(--fator));
+}
+
+.secao h2 {
+  font: 700 1.5rem / var(--u) var(--fonte-titulo);
+  font-stretch: 80%;
+  letter-spacing: -0.025em;
+  hyphens: none;
+  text-wrap: balance;
+}
+
+.conteudo { min-width: 0; }
+
+/* Texto de destaque: o item principal de uma seção */
+.destaque {
+  max-width: calc(var(--u) * 30);
+  font: 600 1.5rem / var(--u) var(--fonte-titulo);
+  font-stretch: 88%;
+  letter-spacing: -0.02em;
+  hyphens: none;
+  text-wrap: balance;
+}
+.destaque + * { margin-top: calc(var(--u) * 2); }
+
+/* Atividades: cursos como linhas de caderno, levemente recuadas */
+.linhas { max-width: calc(var(--u) * 24); }
+.recuo { margin-left: var(--recuo); }
+
+/* Projetos: segundo item menor, deslocado — leitura em diagonal */
+.nota {
+  max-width: calc(var(--u) * 17);
+  margin-left: var(--recuo);
+  font: italic 400 1.25rem / var(--u) var(--fonte-texto);
+  text-wrap: balance;
+}
+
+/* Feiras: duas datas ligadas por um traço, como uma linha do tempo */
+.cronologia {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  column-gap: var(--u);
+}
+.cronologia li {
+  font: 700 1.5rem / calc(var(--u) * 2) var(--fonte-titulo);
+  font-stretch: 85%;
+  letter-spacing: -0.02em;
+}
+
+/* Habilidades: lista em degraus, como anotada à mão */
+.escada p {
+  padding-block: calc(var(--u) * 0.5);
+  font: italic 400 1.25rem / var(--u) var(--fonte-texto);
+  text-wrap: balance;
+}
+.escada p:nth-child(2) { margin-left: var(--passo); }
+.escada p:nth-child(3) { margin-left: calc(var(--passo) * 2); }
+
+/* ---------- Links com marca-texto ---------- */
+.marca {
+  color: inherit;
+  text-decoration: none;
+  padding-inline: 0.08em;
+  background: linear-gradient(var(--marca), var(--marca)) no-repeat 0 88% / 100% 0.3em;
+  -webkit-box-decoration-break: clone;
+          box-decoration-break: clone;
+  transition: background-size 0.3s var(--suave);
+}
+.marca:hover,
+.marca:focus-visible { background-size: 100% 100%; }
+.marca:focus-visible {
+  outline: 2px solid var(--tinta);
+  outline-offset: 3px;
+}
+
+.links-grandes li,
+.contatos li {
+  font: 700 2rem / calc(var(--u) * 2) var(--fonte-titulo);
+  font-stretch: 85%;
+  letter-spacing: -0.025em;
+  hyphens: none;
+}
+.links-grandes li + li { margin-left: var(--recuo); }
+
+.contatos {
+  display: flex;
+  flex-wrap: wrap;
+  column-gap: calc(var(--u) * 2);
+}
+.contatos li {
+  font-size: 3rem;
+  font-weight: 800;
+  font-stretch: 80%;
+  letter-spacing: -0.035em;
+}
+
+/* ---------- Respiro por seção (definido depois da base, para vencer) ---------- */
+.secao--ampla { --fator: 6; }
+.secao--densa { --fator: 3; }
+
+/* ---------- Tablet ---------- */
+@media (min-width: 48rem) {
+  :root {
+    --recuo: calc(var(--u) * 3);
+    --passo: calc(var(--u) * 3);
+  }
+
+  .abertura {
+    --h1: calc(var(--u) * 5.4);
+    --h1-lh: calc(var(--u) * 5);
+    --foto: calc(var(--u) * 4);
+  }
+  .retrato { margin-left: calc(var(--h1) * 1.95); margin-bottom: calc(var(--u) * 0.5); }
+  .apresentacao { margin-left: calc(var(--trilho) + var(--u)); }
+
+  .secao {
+    --fator: 6;
+    grid-template-columns: var(--trilho) minmax(0, 1fr);
+    column-gap: var(--u);
+    row-gap: 0;
+  }
+  .secao--ampla { --fator: 9; }
+  .secao--densa { --fator: 4; }
+
+  .destaque { font-size: 2.75rem; line-height: calc(var(--u) * 2); }
+  .nota {
+    --recuo: calc(var(--u) * 6);
+    margin-top: calc(var(--u) * 3);
+    font-size: 1.5rem;
+  }
+  .destaque + .nota { margin-top: calc(var(--u) * 3); }
+
+  .cronologia li { font-size: 2.5rem; }
+  .cronologia li:first-child::after {
+    content: "";
+    display: inline-block;
+    width: calc(var(--u) * 4);
+    height: 1px;
+    margin-left: var(--u);
+    vertical-align: middle;
+    background: currentColor;
+  }
+
+  .escada p { font-size: 1.75rem; }
+
+  .links-grandes li { font-size: 2.75rem; }
+  .contatos li { font-size: 4rem; line-height: calc(var(--u) * 3); }
+}
+
+/* ---------- Desktop ---------- */
+@media (min-width: 72rem) {
+  .abertura {
+    --h1: calc(var(--u) * 7.2);
+    --h1-lh: calc(var(--u) * 6);
+  }
+  .destaque { font-size: 3rem; }
+  .links-grandes li { font-size: 3rem; }
+  .contatos li { font-size: 4.5rem; line-height: calc(var(--u) * 3); }
+}
+
+/* ---------- Movimento: um único momento, na abertura ---------- */
+@keyframes sobe {
+  from { opacity: 0; transform: translateY(0.18em); }
+}
+@keyframes marca-entra {
+  from { scale: 0 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}
